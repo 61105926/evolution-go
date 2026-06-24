@@ -11,7 +11,7 @@ COPY go.mod go.sum ./
 COPY whatsmeow-lib/ ./whatsmeow-lib/
 
 # Agora fazer download das dependências (com replace funcionando)
-RUN go mod download
+RUN go mod tidy && go mod download
 
 # Copiar o restante do código
 COPY . .
