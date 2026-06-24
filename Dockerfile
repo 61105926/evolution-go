@@ -10,14 +10,13 @@ COPY go.mod go.sum ./
 # Copiar whatsmeow-lib que é uma dependência local
 COPY whatsmeow-lib/ ./whatsmeow-lib/
 
-# Agora fazer download das dependências (com replace funcionando)
-RUN go mod tidy && go mod download
+RUN go mod download
 
-# Copiar o restante do código
+# Copiar o restante do código (incluye los .go para go mod tidy)
 COPY . .
 
-ARG VERSION=dev
-RUN CGO_ENABLED=1 go build -ldflags "-X main.version=${VERSION}" -o server ./cmd/evolution-go
+# Actualizar dependencias y compilar
+RUN go mod tidy && CGO_ENABLED=1 go build -ldflags "-X main.version=${VERSION}" -o server ./cmd/evolution-go
 
 FROM alpine:3.19.1 AS final
 
